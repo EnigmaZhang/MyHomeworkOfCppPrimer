@@ -8,11 +8,11 @@ int main()
 	std::string s = "Who goes with Fergus?\n";
 
 	std::cout << boolToString(s == std::string("Who goes with F\145rgus?\012")) << std::endl;
-	std::cout << boolToString(std::string(typeid("Who goes with F\145rgus?\012").name()) == std::string("char const [23]")) << std::endl;
+	std::cout << boolToString(typeid("Who goes with F\145rgus?\012") == typeid(const char[23])) << std::endl;
 
-	std::cout << boolToString(std::string(typeid(3.14e1L).name()) == std::string("long double")) << std::endl;
-	std::cout << boolToString(std::string(typeid(1024.f).name()) == std::string("float")) << std::endl;
-	std::cout << boolToString(std::string(typeid(3.14L).name()) == std::string("long double")) << std::endl;
+	std::cout << boolToString(typeid(3.14e1L) == typeid(long double)) << std::endl;
+	std::cout << boolToString(typeid(1024.f) == typeid(float)) << std::endl;
+	std::cout << boolToString(typeid(3.14L) == typeid(long double)) << std::endl;
 
 	return 0;
 }
