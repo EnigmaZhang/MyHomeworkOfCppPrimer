@@ -4,7 +4,7 @@
 #include <string>
 struct Sales_data {
 	std::string bookNo;
-	unsigned int units_gold{ 0 };
+	unsigned int units_sold{ 0 };
 	double revenue{ 0.0 };
 };
 
