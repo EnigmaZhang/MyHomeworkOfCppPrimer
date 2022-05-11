@@ -3,9 +3,7 @@
 
 int main()
 {
-	Person person = Person();
-	person.name = "Ellery";
-	person.address = "Shenzhen";
+	Person person = Person("Ellery", "Shenzhen");
 
 	return 0;
 }
