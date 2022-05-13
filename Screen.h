@@ -2,6 +2,20 @@
 #define SCREEN_H
 
 #include <string>
+#include <vector>
+
+class Screen;
+
+class Window_mgr
+{
+public:
+	using ScreenIndex = std::vector<Screen>::size_type;
+	const Screen& getScreen(ScreenIndex i) const { return screens.at(i); }
+	Window_mgr& addScreen(Screen& screen) { screens.push_back(screen); return *this; }
+	void clear(ScreenIndex);
+private:
+	std::vector<Screen> screens;
+};
 
 class Screen
 {
@@ -16,6 +30,7 @@ public:
 	Screen& set(pos, pos, char);
 	Screen& display(std::ostream& os) { do_display(os); return *this; }
 	const Screen& display(std::ostream& os) const { do_display(os); return*this; }
+	friend void Window_mgr::clear(ScreenIndex);
 private:
 	pos cursor{ 0U };
 	pos height{ 0U }, width{ 0U };
@@ -47,6 +62,12 @@ inline Screen& Screen::set(pos r, pos col, char ch)
 {
 	contents[r * width + col] = ch;
 	return *this;
+}
+
+void Window_mgr::clear(ScreenIndex i)
+{
+	Screen& s = screens[i];
+	s.contents = std::string(s.height * s.width, ' ');
 }
 
 #endif
