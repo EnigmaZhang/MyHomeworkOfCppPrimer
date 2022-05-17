@@ -11,14 +11,15 @@ class Sales_data {
 	friend std::istream& read(std::istream&, Sales_data&);
 
 public:
-	Sales_data() = default;
-	Sales_data(const std::string& s) :bookNo(s) {}
 	Sales_data(const std::string& s, unsigned int n, double p) :bookNo(s), units_sold(n), revenue(p* n) {}
-	Sales_data(std::istream&);
+
+	Sales_data() :Sales_data("", 0, 0) {}
+	Sales_data(const std::string& s) :Sales_data(s, 0, 0) {}
+	Sales_data(std::istream& is) :Sales_data() { read(is, *this); }
 
 	std::string isbn() const { return bookNo; }
 	Sales_data& combine(const Sales_data&);
-	inline double avg_price() const;
+	double avg_price() const;
 
 private:
 	std::string bookNo;
@@ -64,11 +65,6 @@ std::istream& read(std::istream& is, Sales_data& item)
 	is >> item.bookNo >> item.units_sold >> price;
 	item.revenue = price * item.units_sold;
 	return is;
-}
-
-Sales_data::Sales_data(std::istream& is)
-{
-	read(is, *this);
 }
 
 #endif
