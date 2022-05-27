@@ -18,6 +18,8 @@ private:
 	double daily_tbl[period];
 };
 
+double Account::interestRate{ 0.0 };
+
 double Account::initRate()
 {
 	return 0.0;
