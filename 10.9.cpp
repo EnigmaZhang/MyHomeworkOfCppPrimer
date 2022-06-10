@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <vector>
 
-void elimDups(std::vector<int> v);
+void elimDups(std::vector<int>& v);
 
 int main()
 {
@@ -13,7 +13,7 @@ int main()
 	return 0;
 }
 
-void elimDups(std::vector<int> v)
+void elimDups(std::vector<int>& v)
 {
 	for (auto i : v)
 	{
