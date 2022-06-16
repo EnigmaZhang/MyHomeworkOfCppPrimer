@@ -5,10 +5,9 @@
 int main()
 {
 	std::list<int> v;
-	while (std::cin)
+	int x;
+	while (std::cin >> x)
 	{
-		int x;
-		std::cin >> x;
 		v.push_back(x);
 	}
 	std::cout << std::count(v.cbegin(), v.cend(), 1) << std::endl;

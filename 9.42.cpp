@@ -6,12 +6,12 @@ int main()
 	std::string s;
 	s.resize(100);
 
-	while (std::cin)
+	char c;
+	while (std::cin.get(c))
 	{
-		char c;
-		c = static_cast<char>(std::cin.get());
 		s.push_back(c);
 	}
-	
+	std::cout << s << std::endl;
+
 	return 0;
 }
