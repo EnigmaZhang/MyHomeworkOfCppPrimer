@@ -6,7 +6,7 @@ int main(int argc, char* argv[])
 {
 	if (argc != 4)
 	{
-		throw new std::runtime_error("There should be 4 args");
+		throw std::runtime_error("There should be 4 args");
 	}
 
 	std::ifstream ifs{ argv[1] };

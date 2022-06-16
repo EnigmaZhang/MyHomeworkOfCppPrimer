@@ -55,7 +55,7 @@ std::unordered_map<std::string, std::string> buildMap(std::ifstream& map_file)
 		}
 		else
 		{
-			throw new std::runtime_error("no rule for " + key);
+			throw std::runtime_error("no rule for " + key);
 		}
 	}
 	return trans_map;

@@ -42,7 +42,7 @@ Year::Year(const std::string& date)
 	}
 	if (v.size() != 3)
 	{
-		throw new std::invalid_argument("argument date don't have three date members");
+		throw std::invalid_argument("argument date don't have three date members");
 	}
 	month_s = v.at(0);
 	day_s = v.at(1);

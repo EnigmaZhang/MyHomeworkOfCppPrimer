@@ -18,7 +18,7 @@ int main()
 	}
 	else
 	{
-		throw new std::runtime_error("File not open");
+		throw std::runtime_error("File not open");
 	}
 
 	for (auto s : v)

@@ -30,7 +30,7 @@ void StrBlob::check(size_type i, const std::string& msg) const
 {
 	if (i >= data->size())
 	{
-		throw new std::out_of_range(msg);
+		throw std::out_of_range(msg);
 	}
 }
 

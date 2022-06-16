@@ -10,7 +10,7 @@ int main(int argc, char* argv[])
 	Sales_data total = Sales_data();
 	if (argc != 3)
 	{
-		throw new std::runtime_error("No file name as argument");
+		throw std::runtime_error("No file name as argument");
 	}
 	auto ifs{ std::ifstream(argv[1]) };
 
