@@ -15,6 +15,19 @@ public:
 	using size_type = std::vector<std::string>::size_type;
 	StrBlob();
 	StrBlob(std::initializer_list<std::string> il);
+
+	StrBlob(const StrBlob& origin)
+	{
+		data = std::make_shared<std::vector<std::string>>(origin.data);
+	}
+
+	StrBlob& operator=(const StrBlob& origin)
+	{
+		auto new_data{ data };
+		data = new_data;
+		return *this;
+	}
+	
 	size_type size() const { return data->size(); }
 	bool empty() const { return data->empty(); }
 	void push_back(const std::string& t) { data->push_back(t); }
