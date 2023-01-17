@@ -17,7 +17,9 @@ public:
 
 	HasPtr& operator=(const HasPtr& origin)
 	{
-		this->ps = new std::string(*origin.ps);
+		auto newp{ new std::string{*origin.ps} };
+		delete ps;
+		ps = newp;
 		i = origin.i;
 
 		return *this;

@@ -4,7 +4,7 @@
 class HasPtr
 {
 public:
-	HasPtr(const std::string& s = std::string()) : ps(new std::string(s)), i(0) {}
+	HasPtr(const std::string& s = std::string()) : ps{ new std::string{s} }, i(0) {}
 
 	HasPtr(const HasPtr& origin)
 	{
@@ -32,7 +32,7 @@ private:
 
 int main()
 {
-	HasPtr p1{ HasPtr(std::string("abc")) };
+	HasPtr p1{ HasPtr{std::string{"abc"}} };
 	HasPtr p2;
 	p2 = p1;
 	std::cout << (p1.get_ps() == p2.get_ps()) << std::endl;
