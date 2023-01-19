@@ -15,6 +15,8 @@ public:
 	StrVec(const StrVec&);
 	StrVec& operator=(const StrVec&);
 	~StrVec();
+	StrVec(StrVec&& s) noexcept;
+	StrVec& operator=(StrVec&& rhs) noexcept;
 	size_t size() const { return first_free - elements; }
 	size_t capacity() const { return cap - elements; }
 	void reserve(size_t);
@@ -91,16 +93,12 @@ void StrVec::free()
 void StrVec::reallocate()
 {
 	auto newcapacity{ size() ? 2 * size() : 1 };
-	auto newdata{ alloc.allocate(newcapacity) };
-	auto dest{ newdata };
-	auto elem{ elements };
-	for (size_t i{ 0 }; i != size(); ++i)
-	{
-		alloc_traits_t::construct(alloc, dest++, std::move(*elem++));
-	}
+	auto first{ alloc.allocate(newcapacity) };
+
+	auto last{ std::uninitialized_copy(std::make_move_iterator(begin()), std::make_move_iterator(end()), first) };
 	free();
-	elements = newdata;
-	first_free = dest;
+	elements = first;
+	first_free = last;
 	cap = elements + newcapacity;
 }
 
@@ -153,6 +151,25 @@ void StrVec::resize(size_t n, const std::string& s = "")
 			pop_back();
 		}
 	}
+}
+
+StrVec::StrVec(StrVec&& s) noexcept:
+	elements{s.elements}, first_free{s.first_free},cap{s.cap}
+{
+	s.elements = s.first_free = s.cap = nullptr;
+}
+
+StrVec& StrVec::operator=(StrVec&& rhs) noexcept
+{
+	if (this != &rhs)
+	{
+		free();
+		elements = rhs.elements;
+		first_free = rhs.first_free;
+		cap = rhs.cap;
+		rhs.elements = rhs.first_free = rhs.cap = nullptr;
+	}
+	return *this;
 }
 
 #endif // !STR_VEC_H

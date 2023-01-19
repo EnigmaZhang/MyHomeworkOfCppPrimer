@@ -32,6 +32,8 @@ public:
 		contents{ str } {}
 	Message(const Message&);
 	Message& operator=(const Message&);
+	Message(Message&&) noexcept;
+	Message& operator=(Message&&) noexcept;
 	~Message();
 	void save(Folder&);
 	void remove(Folder&);
@@ -42,6 +44,7 @@ private:
 	std::set<Folder*> folders;
 	void add_to_Folders(const Message&);
 	void remove_from_Folders();
+	void move_Folders(Message* m);
 };
 
 Message::Message(const Message& m) :
@@ -60,6 +63,23 @@ Message& Message::operator=(const Message& rhs)
 	contents = rhs.contents;
 	folders = rhs.folders;
 	add_to_Folders(rhs);
+	return *this;
+}
+
+Message::Message(Message&& m) noexcept :
+	contents{ std::move(m.contents) }
+{
+	move_Folders(&m);
+}
+
+Message& Message::operator=(Message&& rhs) noexcept
+{
+	if (this != &rhs)
+	{
+		remove_from_Folders();
+		contents = std::move(rhs.contents);
+		move_Folders(&rhs);
+	}
 	return *this;
 }
 
@@ -112,6 +132,17 @@ void swap(Message& lhs, Message& rhs)
 	{
 		f->addMsg(&rhs);
 	}
+}
+
+void Message::move_Folders(Message* m)
+{
+	folders = std::move(m->folders);
+	for (auto f : folders)
+	{
+		f->remMsg(m);
+		f->addMsg(this);
+	}
+	m->folders.clear();
 }
 
 Folder::Folder(const Folder& f) :
