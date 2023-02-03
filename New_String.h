@@ -1,6 +1,7 @@
 #ifndef NEW_STRING_H
 #define NEW_STRING_H
 
+#include <iostream>
 #include <memory>
 #include <algorithm>
 
@@ -16,6 +17,7 @@ public:
 	~String();
 	String(String&& s) noexcept;
 	String& operator=(String&& rhs) noexcept;
+	friend std::ostream& operator<<(std::ostream&, const String&);
 	size_t size() const { return first_free - elements; }
 	size_t capacity() const { return cap - elements; }
 	void reserve(size_t);
@@ -182,6 +184,15 @@ String& String::operator=(String&& rhs) noexcept
 		rhs.elements = rhs.first_free = rhs.cap = nullptr;
 	}
 	return *this;
+}
+
+std::ostream& operator<<(std::ostream& os, const String& s)
+{
+	for (auto b{s.elements}; b != s.first_free; ++b)
+	{
+		os << *b;
+	}
+	return os;
 }
 
 #endif // !NEW_STRING_H

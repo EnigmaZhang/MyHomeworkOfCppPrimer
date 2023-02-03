@@ -9,7 +9,8 @@ class Sales_data {
 	friend Sales_data add(const Sales_data&, const Sales_data&);
 	friend std::ostream& print(std::ostream&, const Sales_data&);
 	friend std::istream& read(std::istream&, Sales_data&);
-
+	friend std::ostream& operator<<(std::ostream&, const Sales_data&);
+	friend std::istream& operator>>(std::istream&, Sales_data&);
 public:
 	Sales_data(const std::string& s, unsigned int n, double p) :bookNo(s), units_sold(n), revenue(p* n) {}
 
@@ -64,6 +65,28 @@ std::istream& read(std::istream& is, Sales_data& item)
 	double price{ 0.0 };
 	is >> item.bookNo >> item.units_sold >> price;
 	item.revenue = price * item.units_sold;
+	return is;
+}
+
+std::ostream& operator<<(std::ostream& os, const Sales_data& item)
+{
+	os << item.isbn() << " " << item.units_sold << " " << item.revenue << " " << item.avg_price();
+	return os;
+}
+
+std::istream& operator>>(std::istream& is, Sales_data& item)
+{
+	double price{ 0.0 };
+	is >> item.bookNo >> item.units_sold >> price;
+	if (is)
+	{
+		item.revenue = price * item.units_sold;
+	}
+	else 
+	{
+		item = Sales_data();
+	}
+	
 	return is;
 }
 
