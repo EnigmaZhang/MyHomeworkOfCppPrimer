@@ -11,12 +11,18 @@ class Sales_data {
 	friend std::istream& read(std::istream&, Sales_data&);
 	friend std::ostream& operator<<(std::ostream&, const Sales_data&);
 	friend std::istream& operator>>(std::istream&, Sales_data&);
+	friend Sales_data operator+(const Sales_data& lhs, const Sales_data& rhs);
+	friend Sales_data operator-(const Sales_data& lhs, const Sales_data& rhs);
+	friend bool operator==(const Sales_data& lhs, const Sales_data& rhs);
+	friend bool operator!=(const Sales_data& lhs, const Sales_data& rhs);
 public:
 	Sales_data(const std::string& s, unsigned int n, double p) :bookNo(s), units_sold(n), revenue(p* n) {}
 
 	Sales_data() :Sales_data("", 0, 0) {}
 	Sales_data(const std::string& s) :Sales_data(s, 0, 0) {}
 	Sales_data(std::istream& is) :Sales_data() { read(is, *this); }
+	Sales_data& operator+=(const Sales_data&);
+	Sales_data& operator-=(const Sales_data&);
 
 	std::string isbn() const { return bookNo; }
 	Sales_data& combine(const Sales_data&);
@@ -82,12 +88,51 @@ std::istream& operator>>(std::istream& is, Sales_data& item)
 	{
 		item.revenue = price * item.units_sold;
 	}
-	else 
+	else
 	{
 		item = Sales_data();
 	}
-	
+
 	return is;
+}
+
+Sales_data operator+(const Sales_data& lhs, const Sales_data& rhs)
+{
+	Sales_data sum{ lhs };
+	sum += rhs;
+	return sum;
+}
+
+Sales_data& Sales_data::operator+=(const Sales_data& rhs)
+{
+	units_sold += rhs.units_sold;
+	revenue += rhs.revenue;
+	return *this;
+}
+
+Sales_data operator-(const Sales_data& lhs, const Sales_data& rhs)
+{
+	Sales_data sub{ lhs };
+	sub -= rhs;
+	return sub;
+}
+
+Sales_data& Sales_data::operator-=(const Sales_data& rhs)
+{
+	units_sold -= rhs.units_sold;
+	revenue -= rhs.revenue;
+	return *this;
+}
+
+bool operator==(const Sales_data& lhs, const Sales_data& rhs)
+{
+	return lhs.isbn() == rhs.isbn()
+		&& lhs.units_sold == rhs.units_sold
+		&& lhs.revenue == rhs.revenue;
+}
+bool operator!=(const Sales_data& lhs, const Sales_data& rhs)
+{
+	return !(lhs == rhs);
 }
 
 #endif

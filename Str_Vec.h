@@ -9,6 +9,9 @@
 class StrVec
 {
 public:
+	friend bool operator==(const StrVec& lhs, const StrVec& rhs);
+	friend bool operator!=(const StrVec& lhs, const StrVec& rhs);
+
 	StrVec() :
 		elements{ nullptr }, first_free{ nullptr }, cap{ nullptr } {}
 	StrVec(std::initializer_list<std::string>);
@@ -170,6 +173,29 @@ StrVec& StrVec::operator=(StrVec&& rhs) noexcept
 		rhs.elements = rhs.first_free = rhs.cap = nullptr;
 	}
 	return *this;
+}
+
+bool operator==(const StrVec& lhs, const StrVec& rhs)
+{
+	if (lhs.size() != rhs.size())
+	{
+		return false;
+	}
+
+	for (const std::string* p1{ lhs.elements }, * p2{ rhs.elements }; p1 != lhs.first_free; ++p1, ++p2)
+	{
+		if (*p1 != *p2)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool operator!=(const StrVec& lhs, const StrVec& rhs)
+{
+	return !(lhs == rhs);
 }
 
 #endif // !STR_VEC_H

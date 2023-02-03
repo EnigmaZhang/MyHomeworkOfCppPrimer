@@ -8,6 +8,9 @@
 class String
 {
 public:
+	friend bool operator== (const String & lhs, const String & rhs);
+	friend bool operator!= (const String& lhs, const String& rhs);
+
 	String() :
 		elements{ nullptr }, first_free{ nullptr }, cap{ nullptr } {}
 	String(std::initializer_list<char>);
@@ -193,6 +196,29 @@ std::ostream& operator<<(std::ostream& os, const String& s)
 		os << *b;
 	}
 	return os;
+}
+
+bool operator== (const String& lhs, const String& rhs)
+{
+	if (lhs.size() != rhs.size())
+	{
+		return false;
+	}
+
+	for (const char* p1{ lhs.elements }, * p2{ rhs.elements }; p1 != lhs.first_free; ++p1, ++p2)
+	{
+		if (*p1 != *p2)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+bool operator!= (const String& lhs, const String& rhs)
+{
+	return !(lhs == rhs);
 }
 
 #endif // !NEW_STRING_H

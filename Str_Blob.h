@@ -12,21 +12,12 @@ class ConstStrBlobPtr;
 class StrBlob
 {
 public:
+	friend bool operator==(const StrBlob& lhs, const StrBlob& rhs);
+	friend bool operator!=(const StrBlob& lhs, const StrBlob& rhs);
+
 	using size_type = std::vector<std::string>::size_type;
 	StrBlob();
 	StrBlob(std::initializer_list<std::string> il);
-
-	StrBlob(const StrBlob& origin)
-	{
-		data = std::make_shared<std::vector<std::string>>(origin.data);
-	}
-
-	StrBlob& operator=(const StrBlob& origin)
-	{
-		auto new_data{ data };
-		data = new_data;
-		return *this;
-	}
 
 	size_type size() const { return data->size(); }
 	bool empty() const { return data->empty(); }
@@ -77,9 +68,23 @@ void StrBlob::pop_back()
 	data->pop_back();
 }
 
+bool operator==(const StrBlob& lhs, const StrBlob& rhs)
+{
+	return *lhs.data == *rhs.data;
+}
+
+bool operator!=(const StrBlob& lhs, const StrBlob& rhs)
+{
+	return !(lhs == rhs);
+}
+
+
 class StrBlobPtr
 {
 public:
+	friend bool operator==(const StrBlobPtr& lhs, const StrBlobPtr& rhs);
+	friend bool operator!=(const StrBlobPtr& lhs, const StrBlobPtr& rhs);
+
 	StrBlobPtr() :curr(0) {}
 	StrBlobPtr(StrBlob& a, size_t sz = 0) : wptr(a.data), curr(sz) {}
 	std::string& deref() const;
@@ -120,9 +125,21 @@ StrBlobPtr& StrBlobPtr::incr()
 	return *this;
 }
 
+bool operator==(const StrBlobPtr& lhs, const StrBlobPtr& rhs)
+{
+	return lhs.curr == rhs.curr && lhs.wptr.lock() == rhs.wptr.lock();
+}
+bool operator!=(const StrBlobPtr& lhs, const StrBlobPtr& rhs)
+{
+	return !(lhs == rhs);
+}
+
 class ConstStrBlobPtr
 {
 public:
+	friend bool operator==(const ConstStrBlobPtr& lhs, const ConstStrBlobPtr& rhs);
+	friend bool operator!=(const ConstStrBlobPtr& lhs, const ConstStrBlobPtr& rhs);
+
 	ConstStrBlobPtr() :curr(0) {}
 	ConstStrBlobPtr(const StrBlob& a, size_t sz = 0) : wptr(a.data), curr(sz) {}
 	std::string& deref() const;
@@ -161,6 +178,15 @@ ConstStrBlobPtr& ConstStrBlobPtr::incr()
 	check(curr, "increment past end of StrBlobStr");
 	++curr;
 	return *this;
+}
+
+bool operator==(const ConstStrBlobPtr& lhs, const ConstStrBlobPtr& rhs)
+{
+	return lhs.curr == rhs.curr && lhs.wptr.lock() == rhs.wptr.lock();
+}
+bool operator!=(const ConstStrBlobPtr& lhs, const ConstStrBlobPtr& rhs)
+{
+	return !(lhs == rhs);
 }
 
 #endif // !STR_BLOB_H
