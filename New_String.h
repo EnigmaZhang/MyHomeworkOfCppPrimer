@@ -10,6 +10,11 @@ class String
 public:
 	friend bool operator== (const String & lhs, const String & rhs);
 	friend bool operator!= (const String& lhs, const String& rhs);
+	friend bool operator<(const String& lhs, const String& rhs);
+	friend bool operator<=(const String& lhs, const String& rhs);
+	friend bool operator>(const String& lhs, const String& rhs);
+	friend bool operator>=(const String& lhs, const String& rhs);
+
 
 	String() :
 		elements{ nullptr }, first_free{ nullptr }, cap{ nullptr } {}
@@ -219,6 +224,61 @@ bool operator== (const String& lhs, const String& rhs)
 bool operator!= (const String& lhs, const String& rhs)
 {
 	return !(lhs == rhs);
+}
+
+bool operator<(const String& lhs, const String& rhs)
+{
+	const char* p1{ lhs.elements }, * p2{ rhs.elements };
+
+	for (; p1 != lhs.first_free && p2 != rhs.first_free; ++p1, ++p2)
+	{
+		if (*p1 < *p2)
+		{
+			return true;
+		}
+		if (*p1 > *p2)
+		{
+			return false;
+		}
+	}
+	if (p1 == lhs.first_free && p2!=rhs.first_free)
+	{
+		return true;
+	}
+
+	return false;
+}
+
+bool operator<=(const String& lhs, const String& rhs)
+{
+	return !(lhs > rhs);
+}
+
+bool operator>(const String& lhs, const String& rhs)
+{
+	const char* p1{ lhs.elements }, * p2{ rhs.elements };
+
+	for (; p1 != lhs.first_free && p2 != rhs.first_free; ++p1, ++p2)
+	{
+		if (*p1 > *p2)
+		{
+			return true;
+		}
+		if (*p1 < *p2)
+		{
+			return false;
+		}
+	}
+	if (p1 != lhs.first_free && p2 == rhs.first_free)
+	{
+		return true;
+	}
+
+	return false;
+}
+bool operator>=(const String& lhs, const String& rhs)
+{
+	return !(lhs < rhs);
 }
 
 #endif // !NEW_STRING_H

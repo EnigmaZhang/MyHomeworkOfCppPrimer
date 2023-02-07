@@ -17,6 +17,7 @@ public:
 	StrVec(std::initializer_list<std::string>);
 	StrVec(const StrVec&);
 	StrVec& operator=(const StrVec&);
+	StrVec& operator=(std::initializer_list<std::string> li);
 	~StrVec();
 	StrVec(StrVec&& s) noexcept;
 	StrVec& operator=(StrVec&& rhs) noexcept;
@@ -61,6 +62,16 @@ StrVec::StrVec(std::initializer_list<std::string> ls) :
 	elements = newdata.first;
 	first_free = cap = newdata.second;
 }
+
+StrVec& StrVec::operator=(std::initializer_list<std::string> li)
+{
+	auto data{ alloc_n_copy(li.begin(), li.end()) };
+	free();
+	elements = data.first;
+	first_free = cap = data.second;
+	return *this;
+}
+
 
 StrVec& StrVec::operator=(const StrVec& rhs)
 {

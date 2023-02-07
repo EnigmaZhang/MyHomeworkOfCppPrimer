@@ -21,6 +21,7 @@ public:
 	Sales_data() :Sales_data("", 0, 0) {}
 	Sales_data(const std::string& s) :Sales_data(s, 0, 0) {}
 	Sales_data(std::istream& is) :Sales_data() { read(is, *this); }
+	Sales_data& operator=(const std::string&);
 	Sales_data& operator+=(const Sales_data&);
 	Sales_data& operator-=(const Sales_data&);
 
@@ -107,6 +108,14 @@ Sales_data& Sales_data::operator+=(const Sales_data& rhs)
 {
 	units_sold += rhs.units_sold;
 	revenue += rhs.revenue;
+	return *this;
+}
+
+Sales_data& Sales_data::operator=(const std::string& isbn)
+{
+	this->bookNo = isbn;
+	this->revenue = 0.0;
+	this->units_sold = 0;
 	return *this;
 }
 
