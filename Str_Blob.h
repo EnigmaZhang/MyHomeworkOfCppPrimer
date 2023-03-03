@@ -80,7 +80,6 @@ bool operator!=(const StrBlob& lhs, const StrBlob& rhs)
 	return !(lhs == rhs);
 }
 
-
 class StrBlobPtr
 {
 public:
@@ -89,7 +88,12 @@ public:
 
 	StrBlobPtr() :curr(0) {}
 	StrBlobPtr(StrBlob& a, size_t sz = 0) : wptr(a.data), curr(sz) {}
-	std::string& operator[](size_t n) { return wptr.lock().get()->at(n); }
+	std::string& operator[](size_t n) { return check(n, "get a subscript").get()->at(n); }
+	const std::string& operator[](size_t n) const { return check(n, "get a subscript").get()->at(n); }
+	StrBlobPtr& operator++();
+	StrBlobPtr& operator--();
+	StrBlobPtr& operator++(int n);
+	StrBlobPtr& operator--(int n);
 	std::string& deref() const;
 	StrBlobPtr& incr();
 private:
@@ -137,6 +141,37 @@ bool operator!=(const StrBlobPtr& lhs, const StrBlobPtr& rhs)
 	return !(lhs == rhs);
 }
 
+
+StrBlobPtr& StrBlobPtr::operator++()
+{
+	check(curr, "increment past end of StrBlobPtr");
+	++curr;
+	return *this;
+
+}
+
+StrBlobPtr& StrBlobPtr::operator--()
+{
+	--curr;
+	check(-1, "decrement past end of StrBlobPtr");
+	return *this;
+}
+
+StrBlobPtr& StrBlobPtr::operator++(int)
+{
+	auto ret{ *this };
+	++* this;
+	return ret;
+
+}
+
+StrBlobPtr& StrBlobPtr::operator--(int)
+{
+	auto ret{ *this };
+	--* this;
+	return ret;
+}
+
 class ConstStrBlobPtr
 {
 public:
@@ -145,7 +180,8 @@ public:
 
 	ConstStrBlobPtr() :curr(0) {}
 	ConstStrBlobPtr(const StrBlob& a, size_t sz = 0) : wptr(a.data), curr(sz) {}
-	const std::string& operator[](size_t n) const { return wptr.lock().get()->at(n); }
+	std::string& operator[](size_t n) { return check(n, "get a subscript").get()->at(n); }
+	const std::string& operator[](size_t n) const { return check(n, "get a subscript").get()->at(n); }
 	std::string& deref() const;
 	ConstStrBlobPtr& incr();
 private:
@@ -188,6 +224,7 @@ bool operator==(const ConstStrBlobPtr& lhs, const ConstStrBlobPtr& rhs)
 {
 	return lhs.curr == rhs.curr && lhs.wptr.lock() == rhs.wptr.lock();
 }
+
 bool operator!=(const ConstStrBlobPtr& lhs, const ConstStrBlobPtr& rhs)
 {
 	return !(lhs == rhs);
