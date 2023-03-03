@@ -18,6 +18,8 @@ public:
 	using size_type = std::vector<std::string>::size_type;
 	StrBlob();
 	StrBlob(std::initializer_list<std::string> il);
+	std::string& operator[](size_t n) { return data.get()->at(n); }
+	const std::string& operator[](size_t n) const { return data.get()->at(n); }
 
 	size_type size() const { return data->size(); }
 	bool empty() const { return data->empty(); }
@@ -87,6 +89,7 @@ public:
 
 	StrBlobPtr() :curr(0) {}
 	StrBlobPtr(StrBlob& a, size_t sz = 0) : wptr(a.data), curr(sz) {}
+	std::string& operator[](size_t n) { return wptr.lock().get()->at(n); }
 	std::string& deref() const;
 	StrBlobPtr& incr();
 private:
@@ -142,6 +145,7 @@ public:
 
 	ConstStrBlobPtr() :curr(0) {}
 	ConstStrBlobPtr(const StrBlob& a, size_t sz = 0) : wptr(a.data), curr(sz) {}
+	const std::string& operator[](size_t n) const { return wptr.lock().get()->at(n); }
 	std::string& deref() const;
 	ConstStrBlobPtr& incr();
 private:

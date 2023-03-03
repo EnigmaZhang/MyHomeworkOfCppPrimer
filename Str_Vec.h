@@ -21,6 +21,8 @@ public:
 	~StrVec();
 	StrVec(StrVec&& s) noexcept;
 	StrVec& operator=(StrVec&& rhs) noexcept;
+	std::string& operator[](std::size_t n) { return elements[n]; }
+	const std::string& operator[](std::size_t n) const { return elements[n]; } 
 	size_t size() const { return first_free - elements; }
 	size_t capacity() const { return cap - elements; }
 	void reserve(size_t);

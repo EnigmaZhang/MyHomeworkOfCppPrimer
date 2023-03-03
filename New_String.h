@@ -25,6 +25,8 @@ public:
 	~String();
 	String(String&& s) noexcept;
 	String& operator=(String&& rhs) noexcept;
+	char operator[](size_t n) { return elements[n]; }
+	const char operator[](size_t n) const { return elements[n]; }
 	friend std::ostream& operator<<(std::ostream&, const String&);
 	size_t size() const { return first_free - elements; }
 	size_t capacity() const { return cap - elements; }
