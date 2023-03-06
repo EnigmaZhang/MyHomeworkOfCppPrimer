@@ -85,6 +85,7 @@ class StrBlobPtr
 public:
 	friend bool operator==(const StrBlobPtr& lhs, const StrBlobPtr& rhs);
 	friend bool operator!=(const StrBlobPtr& lhs, const StrBlobPtr& rhs);
+	friend StrBlobPtr operator+(std::ptrdiff_t n, StrBlobPtr& rhs);
 
 	StrBlobPtr() :curr(0) {}
 	StrBlobPtr(StrBlob& a, size_t sz = 0) : wptr(a.data), curr(sz) {}
@@ -94,6 +95,11 @@ public:
 	StrBlobPtr& operator--();
 	StrBlobPtr& operator++(int n);
 	StrBlobPtr& operator--(int n);
+	StrBlobPtr operator+(std::ptrdiff_t n);
+	StrBlobPtr& operator+=(std::ptrdiff_t n);
+	StrBlobPtr operator-(std::ptrdiff_t n);
+	StrBlobPtr& operator-=(std::ptrdiff_t n);
+
 	std::string& deref() const;
 	StrBlobPtr& incr();
 private:
@@ -153,7 +159,7 @@ StrBlobPtr& StrBlobPtr::operator++()
 StrBlobPtr& StrBlobPtr::operator--()
 {
 	--curr;
-	check(-1, "decrement past end of StrBlobPtr");
+	check(curr, "decrement past begin of StrBlobPtr");
 	return *this;
 }
 
@@ -171,6 +177,41 @@ StrBlobPtr& StrBlobPtr::operator--(int)
 	--* this;
 	return ret;
 }
+
+StrBlobPtr StrBlobPtr::operator+(std::ptrdiff_t n)
+{
+	auto ret{ *this };
+	ret += n;
+	return ret;
+}
+
+StrBlobPtr& StrBlobPtr::operator+=(std::ptrdiff_t n)
+{
+	curr = curr + n;
+	check(curr, "increment past end of StrBlobPtr");
+	return *this;
+}
+
+
+StrBlobPtr StrBlobPtr::operator-(std::ptrdiff_t n)
+{
+	auto ret{ *this };
+	ret -= n;
+	return ret;
+}
+
+StrBlobPtr& StrBlobPtr::operator-=(std::ptrdiff_t n)
+{
+	curr -= n;
+	check(curr, "decrement past begin of StrBlobPtr");
+	return *this;
+}
+
+StrBlobPtr operator+(std::ptrdiff_t n, StrBlobPtr& rhs)
+{
+	return rhs + n;
+}
+
 
 class ConstStrBlobPtr
 {
