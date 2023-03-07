@@ -99,6 +99,12 @@ public:
 	StrBlobPtr& operator+=(std::ptrdiff_t n);
 	StrBlobPtr operator-(std::ptrdiff_t n);
 	StrBlobPtr& operator-=(std::ptrdiff_t n);
+	std::string& operator*() const 
+	{
+		auto p{ check(curr, "dereference past end") };
+		return (*p)[curr];
+	}
+	std::string* operator->() const { return &this->operator*(); }
 
 	std::string& deref() const;
 	StrBlobPtr& incr();
@@ -223,6 +229,13 @@ public:
 	ConstStrBlobPtr(const StrBlob& a, size_t sz = 0) : wptr(a.data), curr(sz) {}
 	std::string& operator[](size_t n) { return check(n, "get a subscript").get()->at(n); }
 	const std::string& operator[](size_t n) const { return check(n, "get a subscript").get()->at(n); }
+	const std::string& operator* () const 
+	{
+		auto p{ check(curr, "dereference past end") };
+		return (*p)[curr];
+	}
+	const std::string* operator->() const { return &this->operator*(); }
+
 	std::string& deref() const;
 	ConstStrBlobPtr& incr();
 private:
