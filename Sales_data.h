@@ -24,6 +24,8 @@ public:
 	Sales_data& operator=(const std::string&);
 	Sales_data& operator+=(const Sales_data&);
 	Sales_data& operator-=(const Sales_data&);
+	explicit operator std::string() const { return bookNo; }
+	explicit operator double() const { return avg_price(); }
 
 	std::string isbn() const { return bookNo; }
 	Sales_data& combine(const Sales_data&);
